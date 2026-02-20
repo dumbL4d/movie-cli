@@ -23,8 +23,7 @@ You need a few external tools installed on your system for the player and downlo
    ```bash
    git clone https://github.com/dumbL4d/movie-cli.git
    cd movie-cli
-
-```
+   ```
 
 2. Install the required Python libraries:
 ```bash
