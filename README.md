@@ -21,7 +21,7 @@ You need a few external tools installed on your system for the player and downlo
 
 1. Clone the repository:
    ```bash
-   git clone [https://github.com/YOUR_USERNAME/movie-cli.git](https://github.com/YOUR_USERNAME/movie-cli.git)
+   git clone https://github.com/dumbL4d/movie-cli.git
    cd movie-cli
 
 ```
