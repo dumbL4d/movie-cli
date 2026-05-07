@@ -9,6 +9,7 @@ from core.resolver import resolve
 from core.player import play
 from core.downloader import download
 from core import storage
+from core.subtitles import fetch as fetch_external_subtitles
 
 console = Console()
 
@@ -189,12 +190,21 @@ def run():
     real_stream = real_data["stream"]
     subtitles = real_data.get("subtitles", [])
 
+    if not subtitles:
+        with console.status("[bold cyan]Searching for subtitles...", spinner="dots"):
+            external = fetch_external_subtitles(
+                media['tmdb_id'], media['media_type'], season, episode,
+                title=media.get('title'), year=media.get('year')
+            )
+            if external:
+                subtitles = external
+
     if subtitles:
         console.print(f"[bold cyan]Found {len(subtitles)} subtitle track(s)![/bold cyan]")
 
     if args.download:
         console.print(f"[bold green]Starting download for:[/bold green] {title_display}")
-        download(real_stream, title_display)
+        download(real_stream, title_display, subtitles=subtitles)
     else:
         console.print(f"[bold green]Starting player for:[/bold green] {title_display}")
         play(real_stream, subtitles)

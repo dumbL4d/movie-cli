@@ -1,4 +1,6 @@
-from cli import run
+from core.dotenv import load_env
 
-if __name__=="__main__":
-	run()
+load_env()
+
+from cli import run
+run()
