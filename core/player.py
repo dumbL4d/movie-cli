@@ -1,3 +1,4 @@
+import os
 import subprocess
 import time
 import platform
@@ -9,10 +10,10 @@ def play(stream_url, subtitles=None):
         "--http-header-fields=Referer: https://vidking.net/"
     ]
 
-    # Inject all scraped subtitles into mpv
     if subtitles:
         for sub_url in subtitles:
-            cmd.append(f"--sub-file={sub_url}")
+            if sub_url.startswith("http://") or sub_url.startswith("https://") or os.path.isfile(sub_url):
+                cmd.append(f"--sub-file={sub_url}")
             
     cmd.append(stream_url)
 

@@ -2,6 +2,7 @@ import os
 import json
 import subprocess
 import time
+from urllib.parse import urlencode
 
 TMDB_BASE = "https://api.themoviedb.org/3"
 VIDKING_MOVIE = "https://www.vidking.net/embed/movie/{}"
@@ -17,7 +18,7 @@ def _curl(url, params=None, timeout=15):
         params["api_key"] = key
     else:
         params = {"api_key": key}
-    qs = "&".join(f"{k}={v}" for k, v in params.items())
+    qs = urlencode(params)
     cmd = ["curl", "-sS", "--max-time", str(timeout), "-H", f"User-Agent: {USER_AGENT}", f"{url}?{qs}"]
     for i in range(3):
         result = subprocess.run(cmd, capture_output=True, timeout=timeout + 5)
