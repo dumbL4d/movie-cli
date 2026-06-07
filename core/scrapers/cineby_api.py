@@ -13,7 +13,7 @@ USER_AGENT = "MovieCLI v1.0"
 def _curl(url, params=None, timeout=15):
     key = os.getenv("TMDB_API_KEY")
     if not key:
-        return None
+        raise ConnectionError("TMDB_API_KEY is not set in your .env file")
     if params:
         params["api_key"] = key
     else:
@@ -33,8 +33,8 @@ class CinebyAPIScraper:
     def search(self, query):
         print(f"[*] Searching TMDB for: {query}")
         data = _curl(f"{TMDB_BASE}/search/multi", {"query": query})
-        if not data:
-            return []
+        if data is None:
+            raise ConnectionError("Failed to connect to TMDB. The server may be down or your internet connection is interrupted.")
 
         results = []
         for m in data.get("results", []):
@@ -52,7 +52,16 @@ class CinebyAPIScraper:
         return results[:10]
 
     def get_tv_details(self, tmdb_id):
-        return _curl(f"{TMDB_BASE}/tv/{tmdb_id}")
+        data = _curl(f"{TMDB_BASE}/tv/{tmdb_id}")
+        if data is None:
+            raise ConnectionError("Failed to connect to TMDB. The server may be down or your internet connection is interrupted.")
+        return data
+
+    def get_season_details(self, tmdb_id, season_number):
+        data = _curl(f"{TMDB_BASE}/tv/{tmdb_id}/season/{season_number}")
+        if data is None:
+            raise ConnectionError("Failed to connect to TMDB. The server may be down or your internet connection is interrupted.")
+        return data
 
     def get_stream_url(self, media_data, season=None, episode=None):
         if media_data["media_type"] == "movie":
